@@ -2,16 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bling.app.bling.PageFragment">
-
+    tools:context="com.bling.app.fragments.HistoryFragment">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/history"
         android:textSize="40dp"
-        android:text="Large Text"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="152dp" />
+        android:textStyle="bold"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>
