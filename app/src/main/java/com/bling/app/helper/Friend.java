@@ -1,14 +1,12 @@
 package com.bling.app.helper;
 
 public class Friend {
-    public int id;
-    public String title;
+    public String username;
 
     public Friend() {
     }
 
-    public Friend(int id, String title) {
-        this.title = title;
-        this.id = id;
+    public Friend(String username) {
+        this.username = username;
     }
 }

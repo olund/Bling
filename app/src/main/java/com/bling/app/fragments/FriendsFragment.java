@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.app.BlingApp;
 import com.bling.app.helper.Friend;
 import com.bling.app.helper.SwipeListAdapter;
@@ -31,7 +32,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private String TAG = FriendsFragment.class.getSimpleName();
 
-    private String URL_TOP_250 = "http://api.androidhive.info/json/imdb_top_250.php?offset=";
+    private String URL = "http://pastebin.com/raw.php?i=UBgHPMgF";
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
@@ -79,7 +80,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     @Override
                                     public void run() {
                     swipeRefreshLayout.setRefreshing(true);
-                    fetchMovies();
+                                        fetchFriends();
                 }
             }
         );
@@ -91,56 +92,51 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @Override
     public void onRefresh() {
-        fetchMovies();
+        fetchFriends();
     }
 
     /**
      * Fetching movies json by making http call
      */
-    private void fetchMovies() {
+    private void fetchFriends() {
 
         // showing refresh animation before making http call
         swipeRefreshLayout.setRefreshing(true);
 
         // appending offset to url
-        String url = URL_TOP_250 + offSet;
+        String url = URL;
 
-        // Volley's json array request object
-        JsonArrayRequest req = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
+        JsonObjectRequest req = new JsonObjectRequest(url, new JSONObject(),
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
+                    public void onResponse(JSONObject response) {
+                        friendList.clear();
+                        try {
+                            JSONArray friends = response.getJSONArray("friends");
 
-                        if (response.length() > 0) {
+                            if (friends.length() > 0) {
+                                for (int i = 0; i < friends.length(); i++) {
+                                    try {
+                                        JSONObject friendObj = friends.getJSONObject(i);
 
-                            // looping through json and adding to movies list
-                            for (int i = 0; i < response.length(); i++) {
-                                try {
-                                    JSONObject movieObj = response.getJSONObject(i);
+                                        String username = friendObj.getString("username");
 
-                                    int rank = movieObj.getInt("rank");
-                                    String title = movieObj.getString("title");
+                                        Friend m = new Friend(username);
 
-                                    Friend m = new Friend(rank, title);
-
-                                    friendList.add(0, m);
-
-                                    // updating offset value to highest value
-                                    if (rank >= offSet)
-                                        offSet = rank;
-
-                                } catch (JSONException e) {
-                                    Log.e(TAG, "JSON Parsing error: " + e.getMessage());
+                                        friendList.add(m);
+                                    } catch (JSONException e) {
+                                        Log.e(TAG, "JSON Parsing error: " + e.getMessage());
+                                    }
                                 }
-                            }
 
-                            adapter.notifyDataSetChanged();
+                                adapter.notifyDataSetChanged();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Server Error: " + e.getMessage());
                         }
 
                         // stopping swipe refresh
                         swipeRefreshLayout.setRefreshing(false);
-
                     }
                 }, new Response.ErrorListener() {
             @Override

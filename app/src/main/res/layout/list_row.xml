@@ -4,24 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/serial"
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="25dp"
-        android:layout_margin="5dp"
+        android:id="@+id/userIcon"
+        android:src="@drawable/ic_person_black_24dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        android:layout_alignParentStart="true"
+        android:padding="20dp"
+        android:paddingRight="1dp"/>
 
     <TextView
-        android:id="@+id/title"
-        android:layout_toRightOf="@id/serial"
-        android:layout_centerVertical="true"
+        android:id="@+id/username"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:paddingLeft="20dp"
-        android:textSize="18dp" />
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textSize="18dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/userIcon" />
 
 </RelativeLayout>

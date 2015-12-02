@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -52,14 +53,11 @@ public class SwipeListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.list_row, null);
 
-        TextView serial = (TextView) convertView.findViewById(R.id.serial);
-        TextView title = (TextView) convertView.findViewById(R.id.title);
+        TextView username = (TextView) convertView.findViewById(R.id.username);
 
-        serial.setText(String.valueOf(friendList.get(position).id));
-        title.setText(friendList.get(position).title);
+        username.setText(friendList.get(position).username);
 
-        String color = bgColors[position % bgColors.length];
-        serial.setBackgroundColor(Color.parseColor(color));
+        ImageView img = (ImageView) convertView.findViewById(R.id.userIcon);
 
         return convertView;
     }
