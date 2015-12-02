@@ -1,4 +1,4 @@
-package com.bling.app.bling;
+package com.bling.app;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

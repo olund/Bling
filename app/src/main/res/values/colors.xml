@@ -6,4 +6,8 @@
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
+
+    <color name="refresh_progress_1">@color/colorPrimary</color>
+    <color name="refresh_progress_2">#3F51B5</color>
+    <color name="refresh_progress_3">@color/colorAccent</color>
 </resources>

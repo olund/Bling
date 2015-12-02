@@ -1,4 +1,4 @@
-package com.bling.app.bling;
+package com.bling.app.app;
 
 import org.junit.Test;
 
