@@ -110,7 +110,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        friendList.clear();
+                        //friendList.clear();
                         try {
                             JSONArray friends = response.getJSONArray("friends");
 
