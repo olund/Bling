@@ -14,4 +14,10 @@
         android:title="@string/title_login"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_register"
+        android:orderInCategory="102"
+        android:title="@string/title_register"
+        app:showAsAction="never" />
+
 </menu>

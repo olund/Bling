@@ -25,7 +25,12 @@
         </activity>
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_login">
+        </activity>
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:label="@string/title_register">
+        </activity>
     </application>
 
 </manifest>

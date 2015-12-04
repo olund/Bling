@@ -6,11 +6,11 @@
     android:orientation="vertical"
     android:background="@color/colorPrimary"
     android:theme="@style/Color.Back.Base"
-    tools:context=".activity.LoginActivity" >
+    tools:context=".activity.RegisterActivity" >
 
     <!-- Login progress -->
     <ProgressBar
-        android:id="@+id/login_progress"
+        android:id="@+id/register_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,14 +20,14 @@
     <ImageView
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:id="@+id/sign_in_logo"
+        android:id="@+id/register_logo"
         android:src="@drawable/logo_large2"
         android:layout_gravity="center_horizontal"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"/>
 
     <LinearLayout
-        android:id="@+id/login_form"
+        android:id="@+id/register_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -35,7 +35,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:layout_below="@id/sign_in_logo" >
+        android:layout_below="@id/register_logo" >
+
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -49,14 +50,31 @@
                 android:inputType="textShortMessage"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textSize="25sp"
+                android:textSize="22sp"
                 android:textColor="@android:color/white"/>
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="22sp"
+                android:textColor="@android:color/white"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/password"
@@ -64,15 +82,53 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
                 android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeActionLabel="@string/action_register"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:textSize="25sp"
+                android:textSize="22sp"
                 android:singleLine="true"
                 android:textColor="@android:color/white"/>
 
         </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/prompt_date"
+            android:id="@+id/textView"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp">
+
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_day"
+                android:layout_weight="2" />
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_month"
+                android:layout_weight="4" />
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_year"
+                android:layout_weight="2" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
     <!--
@@ -97,13 +153,13 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/sign_in_button"
+            android:id="@+id/register_button"
             style="?android:textAppearanceLarge"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="16dp"
             android:padding="20dp"
-            android:text="@string/action_sign_in"
+            android:text="@string/action_register"
             android:textStyle="bold"
             android:textSize="40sp"
             android:background="@color/colorPrimaryLight"

@@ -64,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+        if (id == R.id.action_register) {
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
+        }
 
         return super.onOptionsItemSelected(item);
     }

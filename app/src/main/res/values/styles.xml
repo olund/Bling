@@ -12,16 +12,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Color.Back.Base" parent="Theme.AppCompat.Light">
+    <style name="Color.Back.Base" parent="MyMaterialTheme.Base">
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorControlActivated">@android:color/white</item>
-        <item name="colorControlHighlight">@android:color/white</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
+    </style>
+
+    <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="EditTextLight">
-        <item name="android:textColor">@android:color/white</item>
+    <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
     </style>
 
 </resources>
