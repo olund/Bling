@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
 import com.bling.app.app.BlingApp;
@@ -89,7 +90,53 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
      * Fetching messages
      */
     private void fetchMessages() {
+        // showing refresh animation before making http call
+        swipeRefreshLayout.setRefreshing(true);
 
+        // appending offset to url
+        String url = URL;
+        JsonArrayRequest req = new JsonArrayRequest(url,
+            new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray messages) {
+                    Log.d(ACTIVITY_NAME, messages.toString());
+
+                    if (messages.length() > 0) {
+                        for (int i = 0; i < messages.length(); i++) {
+                            try {
+                                JSONObject message = messages.getJSONObject(i);
+
+                                String from = message.getString("fromId");
+                                String type = message.getString("type");
+                                String time = message.getString("time");
+
+                                messageList.add(new Message(from, type, time));
+
+                            } catch (JSONException e) {
+                                Log.e(ACTIVITY_NAME, "JSON Parsing error: " + e.getMessage());
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    // stopping swipe refresh
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e(ACTIVITY_NAME, "Server Error: " + error.getMessage());
+
+            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+
+            // stopping swipe refresh
+            swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        // Adding request to request queue
+        BlingApp.getInstance().addToRequestQueue(req);
 
     }
 
