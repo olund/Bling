@@ -31,6 +31,8 @@
             android:name=".activity.RegisterActivity"
             android:label="@string/title_register">
         </activity>
+        <activity android:name=".activity.SplashActivity">
+        </activity>
     </application>
 
 </manifest>
