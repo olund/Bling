@@ -2,18 +2,21 @@ package com.bling.app.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.bling.app.R;
+import com.bling.app.app.BlingApp;
+import com.bling.app.helper.Friend;
+import com.bling.app.helper.SwipeFriendListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,12 +24,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.bling.app.app.BlingApp;
-import com.bling.app.helper.Friend;
-import com.bling.app.helper.SwipeListAdapter;
-import com.bling.app.R;
 
 public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -36,7 +33,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
-    private SwipeListAdapter adapter;
+    private SwipeFriendListAdapter adapter;
     private List<Friend> friendList;
 
     // initially offset will be 0, later will be updated while parsing the json
@@ -67,7 +64,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
 
         friendList = new ArrayList<>();
-        adapter = new SwipeListAdapter(getActivity(), friendList);
+        adapter = new SwipeFriendListAdapter(getActivity(), friendList);
         listView.setAdapter(adapter);
 
         swipeRefreshLayout.setOnRefreshListener(this);

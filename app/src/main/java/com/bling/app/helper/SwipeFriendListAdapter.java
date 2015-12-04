@@ -14,19 +14,14 @@ import java.util.List;
 
 import com.bling.app.R;
 
-/**
- * Created by Ravi on 13/05/15.
- */
-public class SwipeListAdapter extends BaseAdapter {
+public class SwipeFriendListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Friend> friendList;
-    private String[] bgColors;
 
-    public SwipeListAdapter(Activity activity, List<Friend> friendList) {
+    public SwipeFriendListAdapter(Activity activity, List<Friend> friendList) {
         this.activity = activity;
         this.friendList = friendList;
-        bgColors = activity.getApplicationContext().getResources().getStringArray(R.array.movie_serial_bg);
     }
 
     @Override
