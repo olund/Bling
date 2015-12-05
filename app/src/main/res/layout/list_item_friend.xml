@@ -30,7 +30,7 @@
         android:paddingBottom="20dp"
         android:textSize="18sp"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/userIcon"
-        android:layout_toRightOf="@+id/userIcon" />
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon" />
 
 </RelativeLayout>
