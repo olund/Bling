@@ -2,7 +2,6 @@ package com.bling.app.helper;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,13 +45,13 @@ public class SwipeFriendListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row, null);
+            convertView = inflater.inflate(R.layout.list_item_friend, null);
 
         TextView username = (TextView) convertView.findViewById(R.id.username);
 
         username.setText(friendList.get(position).username);
 
-        ImageView img = (ImageView) convertView.findViewById(R.id.userIcon);
+        ImageView img = (ImageView) convertView.findViewById(R.id.icon);
 
         return convertView;
     }
