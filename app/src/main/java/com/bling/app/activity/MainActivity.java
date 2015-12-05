@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +25,20 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-public class MainActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     protected GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    public Location mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         setContentView(R.layout.activity_main);
 
         buildGoogleApiClient();
+
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(30 * 1000)        // 30 seconds, in milliseconds
+            .setFastestInterval(10 * 1000);  // 10 seconds, in milliseconds
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -114,35 +125,42 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         viewPager.setCurrentItem(1);
     }
 
+    private void handleNewLocation(Location location) {
+        Log.d(TAG, location.toString());
+        String latitude = String.valueOf(location.getLatitude());
+        String longitude = String.valueOf(location.getLongitude());
+
+        Snackbar.make(this.findViewById(android.R.id.content), "Lat: " + latitude + ", Lon: " + longitude, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
     @Override
     public void onConnected(Bundle bundle) {
-        Log.e("INFO", "Google Play services connected.");
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+        Log.e(TAG, "Google Play services connected.");
 
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
-            String latitude = String.valueOf(mLastLocation.getLatitude());
-            String longitude = String.valueOf(mLastLocation.getLongitude());
-
-            Snackbar.make(this.findViewById(android.R.id.content), "Lat: " + latitude + ", Lon: " + longitude, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-
+            Log.d(TAG, "Time since last location update: " + String.valueOf(mLastLocation.getTime()));
+            handleNewLocation(mLastLocation);
         } else {
-            Snackbar.make(this.findViewById(android.R.id.content), "Location not available", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Log.e(TAG, "No saved location requesting new.");
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.e("WARNING", "Google Play services suspended.");
+        Log.e(TAG, "Google Play services suspended.");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e("WARNING", "Google Play services connection failed.");
+        Log.e(TAG, "Google Play services connection failed.");
+    }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        handleNewLocation(location);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
