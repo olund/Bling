@@ -4,7 +4,10 @@
     <string name="history">History</string>
     <string name="nearby">Nearby</string>
 
-    <string name="title_login">Login</string>
+    <string name="title_login">Sign in</string>
+    <string name="title_register">Register</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_add_friend">Add Friend</string>
     <string name="title_settings">Settings</string>
 
     <string-array name="movie_serial_bg">
@@ -15,7 +18,7 @@
         <item>#fcba59</item>
         <item>#24c6d5</item>
     </string-array>
-    <string name="title_activity_login">Sign in</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -33,9 +36,9 @@
     </string>
     <string name="action_register">Register</string>
     <string name="prompt_date">Birthday</string>
-    <string name="title_register">Register</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_message">Welcome to Bling!</string>
+    <string name="prompt_friend">Friends name</string>
+    <string name="action_add_friend">Add Friend</string>
 </resources>

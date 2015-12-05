@@ -1,5 +1,6 @@
 package com.bling.app.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
+import com.bling.app.activity.AddFriendActivity;
 import com.bling.app.app.BlingApp;
 import com.bling.app.helper.Friend;
 import com.bling.app.helper.SwipeFriendListAdapter;
@@ -75,8 +77,10 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getActivity(), AddFriendActivity.class);
+                startActivity(intent);
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //    .setAction("Action", null).show();
             }
         });
 

@@ -26,6 +26,7 @@
     </style>
 
     <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+
     </style>
 
     <style name="Divider">
@@ -33,5 +34,9 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/colorPrimaryDark</item>
     </style>
+
+    <style name="MyMaterialTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="MyMaterialTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

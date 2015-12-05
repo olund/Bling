@@ -4,10 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".app.BlingApp"
@@ -32,6 +28,15 @@
             android:label="@string/title_register">
         </activity>
         <activity android:name=".activity.SplashActivity">
+        </activity>
+        <activity
+            android:name=".activity.AddFriendActivity"
+            android:label="@string/title_add_friend"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="activity.MainActivity" />
         </activity>
     </application>
 
