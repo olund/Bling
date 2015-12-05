@@ -10,23 +10,13 @@
     <string name="title_add_friend">Add Friend</string>
     <string name="title_settings">Settings</string>
 
-    <string-array name="movie_serial_bg">
-        <item>#24c6d5</item>
-        <item>#57dd86</item>
-        <item>#ad7dcf</item>
-        <item>#ff484d</item>
-        <item>#fcba59</item>
-        <item>#24c6d5</item>
-    </string-array>
-
-
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="status_signing_in">Signing in ...</string>
+    <string name="status_signing_in">Signing in (…, &#8230;)</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -35,9 +25,8 @@
         completions."
     </string>
     <string name="action_register">Register</string>
-    <string name="prompt_date">Birthday</string>
+    <string name="prompt_date">Birthdate</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_message">Welcome to Bling!</string>
     <string name="prompt_friend">Friends name</string>
     <string name="action_add_friend">Add Friend</string>
