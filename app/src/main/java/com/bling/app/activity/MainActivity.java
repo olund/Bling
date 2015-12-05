@@ -1,13 +1,17 @@
 package com.bling.app.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     protected GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     public Location mLastLocation;
+    static final int PERMISSION_REQUEST_LOCATION = 201;
+    public boolean locationPermission = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +53,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         buildGoogleApiClient();
 
-        // Create the LocationRequest object
-        mLocationRequest = LocationRequest.create()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(30 * 1000)        // 30 seconds, in milliseconds
-            .setFastestInterval(10 * 1000);  // 10 seconds, in milliseconds
+        checkPermissions();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,6 +63,29 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    locationPermission = true;
+                    if(mGoogleApiClient.isConnected())
+                        getLocation();
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     @Override
@@ -108,12 +133,54 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         return super.onOptionsItemSelected(item);
     }
 
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Log.e(TAG, "NOT GRANTED");
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSION_REQUEST_LOCATION);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            Log.e(TAG, "GRANTED");
+            locationPermission = true;
+        }
+    }
+
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    private void buildLocationRequestObject() {
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(30 * 1000)        // 30 seconds, in milliseconds
+                .setFastestInterval(10 * 1000);  // 10 seconds, in milliseconds
+
+        getLocation();
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -134,10 +201,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                 .setAction("Action", null).show();
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.e(TAG, "Google Play services connected.");
-
+    public void getLocation() {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
             Log.d(TAG, "Time since last location update: " + String.valueOf(mLastLocation.getTime()));
@@ -146,6 +210,13 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
             Log.e(TAG, "No saved location requesting new.");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.e(TAG, "Google Play services connected.");
+        if(locationPermission)
+            getLocation();
     }
 
     @Override
