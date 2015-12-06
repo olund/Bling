@@ -1,6 +1,7 @@
 package com.bling.app.fragments;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,7 @@ import com.bling.app.R;
 import com.bling.app.activity.AddFriendActivity;
 import com.bling.app.app.BlingApp;
 import com.bling.app.helper.Friend;
+import com.bling.app.helper.LocationModel;
 import com.bling.app.helper.SwipeFriendListAdapter;
 
 import org.json.JSONArray;
@@ -29,7 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LocationModel.OnCustomStateListener{
 
     private String TAG = FriendsFragment.class.getSimpleName();
 
@@ -57,6 +59,8 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
+
+        LocationModel.getInstance().setListener(this);
 
         listView = (ListView) rootView.findViewById(R.id.listView);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
@@ -97,6 +101,12 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         );
         return rootView;
+    }
+
+    @Override
+    public void stateChanged() {
+        Location location = LocationModel.getInstance().getLocation();
+        Log.d(TAG, "FriendsFragment says: Location changed: " + String.valueOf(location));
     }
 
     /**

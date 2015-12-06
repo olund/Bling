@@ -1,5 +1,7 @@
 package com.bling.app.fragments;
 
+import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,10 +17,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
+import com.bling.app.activity.MainActivity;
 import com.bling.app.app.BlingApp;
 import com.bling.app.helper.Friend;
+import com.bling.app.helper.LocationModel;
 import com.bling.app.helper.Message;
 import com.bling.app.helper.SwipeHistoryListAdapter;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,8 +32,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LocationModel.OnCustomStateListener{
 
+    public static final String TAG = HistoryFragment.class.getSimpleName();
     // Sample json data
     private String URL = "http://pastebin.com/raw.php?i=RnDWdKd7";
 
@@ -54,6 +60,8 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
 
+        LocationModel.getInstance().setListener(this);
+
         listView = (ListView) rootView.findViewById(R.id.listView);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
 
@@ -76,6 +84,12 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         );
         return rootView;
+    }
+
+    @Override
+    public void stateChanged() {
+        Location location = LocationModel.getInstance().getLocation();
+        Log.d(TAG, "HistoryFragment says: Location changed: " + String.valueOf(location));
     }
 
     /**
