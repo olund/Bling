@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ListView listView;
     private SwipeHistoryListAdapter adapter;
     private List<Message> messageList;
+    private Location mLocation;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -76,6 +78,9 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     case Constant.MESSAGE_TYPE_DISTANCE:
 
                         Intent intent = new Intent(getContext(), DistanceActivity.class);
+                        intent.putExtra("message", message);
+                        intent.putExtra("currentLocation", mLocation);
+
                         startActivity(intent);
 
                         break;
@@ -122,8 +127,8 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void locationChanged() {
-        Location location = LocationModel.getInstance().getLocation();
-        Log.d(TAG, "HistoryFragment says: Location changed: " + String.valueOf(location));
+        this.mLocation = LocationModel.getInstance().getLocation();
+        Log.d(TAG, "HistoryFragment says: Location changed: " + String.valueOf(this.mLocation));
     }
 
     /**
