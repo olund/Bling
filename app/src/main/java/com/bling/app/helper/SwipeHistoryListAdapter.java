@@ -74,11 +74,7 @@ public class SwipeHistoryListAdapter extends BaseAdapter {
             TextView from = (TextView) convertView.findViewById(R.id.sender);
             TextView created = (TextView) convertView.findViewById(R.id.time);
 
-
             from.setText(messageList.get(position).from);
-            Log.e(TAG, messageList.get(position).from);
-            Log.e(TAG, messageList.get(position).getAge());
-
             created.setText(messageList.get(position).getAge());
 
             ImageView img = (ImageView) convertView.findViewById(R.id.icon);

@@ -37,6 +37,7 @@ public class Message implements Serializable {
     }
 
     public String getAge() {
+        // TODO: Remove dot from Date format
         return (String) DateUtils.getRelativeTimeSpanString(this.created, System.currentTimeMillis(), 0L, DateUtils.FORMAT_ABBREV_ALL);
     }
 }

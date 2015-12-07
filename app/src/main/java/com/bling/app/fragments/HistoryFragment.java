@@ -30,12 +30,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bling.app.helper.Constant;
+
 public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LocationModel.OnCustomStateListener{
 
     public static final String TAG = HistoryFragment.class.getSimpleName();
 
-    private String URL = "http://pastebin.com/raw.php?i=PDFz2MAc";
-    //private String URL = "http://192.168.1.210:3000/users/messages/5665ca0e1b25f2514a062525";
+    //private String URL = "http://pastebin.com/raw.php?i=PDFz2MAc";
+    private String URL = "http://192.168.1.210:3000/users/messages/5665ca0e1b25f2514a062525";
+
 
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -66,9 +69,28 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Message message = (Message) listView.getItemAtPosition(position);
+
                 Log.d(TAG, "Message from: " + message.from + " clicked.");
-                Intent intent = new Intent(getContext(), DistanceActivity.class);
-                startActivity(intent);
+
+                switch (message.type) {
+                    case Constant.MESSAGE_TYPE_DISTANCE:
+
+                        Intent intent = new Intent(getContext(), DistanceActivity.class);
+                        startActivity(intent);
+
+                        break;
+
+                    case Constant.MESSAGE_TYPE_FRIEND_REQUEST:
+                        break;
+
+                    case Constant.MESSAGE_TYPE_POSITION:
+                        break;
+
+                    default:
+                        break;
+                }
+
+
             }
         });
 
@@ -118,6 +140,10 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void fetchMessages() {
         // showing refresh animation before making http call
         swipeRefreshLayout.setRefreshing(true);
+
+
+        // Clear list
+        messageList.clear();
 
         // appending offset to url
 
