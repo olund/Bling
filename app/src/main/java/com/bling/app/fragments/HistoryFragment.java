@@ -1,5 +1,6 @@
 package com.bling.app.fragments;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.bling.app.R;
+import com.bling.app.activity.DistanceActivity;
 import com.bling.app.app.BlingApp;
 import com.bling.app.helper.LocationModel;
 import com.bling.app.helper.Message;
@@ -30,10 +33,10 @@ import java.util.List;
 public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LocationModel.OnCustomStateListener{
 
     public static final String TAG = HistoryFragment.class.getSimpleName();
-    // Sample json data
-    private String URL = "http://pastebin.com/raw.php?i=RnDWdKd7";
 
-    private String ACTIVITY_NAME = HistoryFragment.class.getSimpleName();
+    private String URL = "http://pastebin.com/raw.php?i=PDFz2MAc";
+    //private String URL = "http://192.168.1.210:3000/users/messages/5665ca0e1b25f2514a062525";
+
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
@@ -58,6 +61,17 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         LocationModel.getInstance().setListener(this);
 
         listView = (ListView) rootView.findViewById(R.id.listView);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Message message = (Message) listView.getItemAtPosition(position);
+                Log.d(TAG, "Message from: " + message.from + " clicked.");
+                Intent intent = new Intent(getContext(), DistanceActivity.class);
+                startActivity(intent);
+            }
+        });
+
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setColorSchemeResources(
@@ -106,46 +120,44 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         swipeRefreshLayout.setRefreshing(true);
 
         // appending offset to url
+
         String url = URL;
-        JsonArrayRequest req = new JsonArrayRequest(url,
-            new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray messages) {
-                    Log.d(ACTIVITY_NAME, messages.toString());
+        JsonArrayRequest req = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray messages) {
+                Log.d(TAG, messages.toString());
 
-                    if (messages.length() > 0) {
-                        for (int i = 0; i < messages.length(); i++) {
-                            try {
-                                JSONObject message = messages.getJSONObject(i);
+                if (messages.length() > 0) {
+                    for (int i = 0; i < messages.length(); i++) {
+                        try {
+                            JSONObject message = messages.getJSONObject(i);
 
-                                String from = message.getString("fromId");
-                                String type = message.getString("type");
-                                String time = message.getString("time");
+                            messageList.add(new Message(message));
 
-                                messageList.add(new Message(from, type, time));
-
-                            } catch (JSONException e) {
-                                Log.e(ACTIVITY_NAME, "JSON Parsing error: " + e.getMessage());
-                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, "JSON Parsing error: " + e.getMessage());
                         }
-
-                        adapter.notifyDataSetChanged();
                     }
 
-                    // stopping swipe refresh
-                    swipeRefreshLayout.setRefreshing(false);
+                    adapter.notifyDataSetChanged();
                 }
-            }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e(ACTIVITY_NAME, "Server Error: " + error.getMessage());
 
-            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                // stopping swipe refresh
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Server Error: " + error.getMessage());
 
-            // stopping swipe refresh
-            swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+
+                // stopping swipe refresh
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
+
+
 
         // Adding request to request queue
         BlingApp.getInstance().addToRequestQueue(req);

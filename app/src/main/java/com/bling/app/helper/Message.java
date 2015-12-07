@@ -1,13 +1,42 @@
 package com.bling.app.helper;
 
-public class Message {
+import android.text.format.DateUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+
+public class Message implements Serializable {
+
+    public JSONObject message;
+
+    public String id;
+    public String fromId;
     public String from;
     public String type;
-    public String time;
+    public long created;
+    public double longitude;
+    public double latitude;
+    public boolean read;
 
-    public Message(String from, String type, String time) {
-        this.from = from;
-        this.type = type;
-        this.time = time;
+    public Message(JSONObject message) {
+        this.message = message;
+        try {
+            this.id = message.getString("_id");
+            this.fromId = message.getJSONObject("fromId").getString("_id");
+            this.from = message.getJSONObject("fromId").getString("username");
+            this.type = message.getString("type");
+            this.created = message.getLong("created");
+            this.longitude = message.getDouble("longitude");
+            this.latitude = message.getDouble("latitude");
+            this.read = message.getBoolean("read");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getAge() {
+        return (String) DateUtils.getRelativeTimeSpanString(this.created, System.currentTimeMillis(), 0L, DateUtils.FORMAT_ABBREV_ALL);
     }
 }

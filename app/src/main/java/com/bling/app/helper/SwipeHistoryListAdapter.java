@@ -2,6 +2,7 @@ package com.bling.app.helper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,16 @@ import com.bling.app.R;
 import java.util.List;
 
 public class SwipeHistoryListAdapter extends BaseAdapter {
+
+    public static final String TAG = SwipeHistoryListAdapter.class.getSimpleName();
+
+
     private Activity activity;
     private LayoutInflater inflater;
     private List<Message> messageList;
-    private String POSITION = "position";
-    private String DISTANCE = "distance";
-    private String FRIEND_REQUEST = "friendReq";
+    private final String POSITION = "position";
+    private final String DISTANCE = "distance";
+    private final String FRIEND_REQUEST = "friendReq";
 
     public SwipeHistoryListAdapter(Activity activity, List<Message> messageList) {
         this.activity = activity;
@@ -44,30 +49,43 @@ public class SwipeHistoryListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (inflater == null)
-            inflater = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null)
+        if (inflater == null) {
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
 
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_distance, null);
+        }
 
-            if (messageList.get(position).type.equals(FRIEND_REQUEST))
+        if (messageList.get(position).type != null) {
+
+            if (messageList.get(position).type.equals(FRIEND_REQUEST)) {
                 convertView = inflater.inflate(R.layout.list_item_friend_request, null);
+            }
 
-            if (messageList.get(position).type.equals(DISTANCE))
+            if (messageList.get(position).type.equals(DISTANCE)) {
                 convertView = inflater.inflate(R.layout.list_item_distance, null);
+            }
 
-            if (messageList.get(position).type.equals(POSITION))
+            if (messageList.get(position).type.equals(POSITION)) {
                 convertView = inflater.inflate(R.layout.list_item_position, null);
+            }
 
-        TextView sender = (TextView) convertView.findViewById(R.id.sender);
+            TextView from = (TextView) convertView.findViewById(R.id.sender);
+            TextView created = (TextView) convertView.findViewById(R.id.time);
 
-        TextView time = (TextView) convertView.findViewById(R.id.time);
 
-        sender.setText(messageList.get(position).from);
-        time.setText(messageList.get(position).time);
+            from.setText(messageList.get(position).from);
+            Log.e(TAG, messageList.get(position).from);
+            Log.e(TAG, messageList.get(position).getAge());
 
-        ImageView img = (ImageView) convertView.findViewById(R.id.icon);
+            created.setText(messageList.get(position).getAge());
+
+            ImageView img = (ImageView) convertView.findViewById(R.id.icon);
+        } else {
+            Log.e(TAG, "Invalid message");
+            //from.setText("Invalid message.");
+        }
 
         return convertView;
     }
