@@ -1,7 +1,6 @@
 package com.bling.app.activity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -20,20 +19,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bling.app.R;
+import com.bling.app.fragments.FriendsFragment;
+import com.bling.app.fragments.HistoryFragment;
+import com.bling.app.fragments.NearbyFragment;
+import com.bling.app.helper.LocationModel;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.bling.app.R;
-import com.bling.app.fragments.*;
-
-import com.bling.app.helper.LocationModel;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity implements LocationModel.OnCustomStateListener {
 
@@ -50,29 +43,27 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Snackbar.make(this.findViewById(android.R.id.content), "Lat: " + latitude + ", Lon: " + longitude, Snackbar.LENGTH_LONG)
-        //        .setAction("Action", null).show();
-
-
         LocationModel.getInstance().setListener(this);
         LocationModel.getInstance().setContext(this);
 
         //checkPermissions();
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @Override
-    public void stateChanged() {
+    public void locationChanged() {
         Location location = LocationModel.getInstance().getLocation();
         Log.d(TAG, "MainActivity says: Location changed: " + String.valueOf(location));
+        Snackbar.make(this.findViewById(android.R.id.content), "Lat: " + location.getLatitude() + ", Lon: " + location.getLongitude(), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override

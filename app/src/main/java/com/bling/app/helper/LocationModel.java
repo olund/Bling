@@ -29,7 +29,7 @@ public class LocationModel extends Application implements GoogleApiClient.Connec
     private boolean mLocationPermission = false;
 
     public interface OnCustomStateListener {
-        void stateChanged();
+        void locationChanged();
     }
 
     private static LocationModel mInstance;
@@ -69,7 +69,7 @@ public class LocationModel extends Application implements GoogleApiClient.Connec
 
     private void notifyStateChange() {
         for (int i = 0; i < mListenerArray.size(); i++) {
-            mListenerArray.get(i).stateChanged();
+            mListenerArray.get(i).locationChanged();
         }
     }
 
@@ -106,9 +106,9 @@ public class LocationModel extends Application implements GoogleApiClient.Connec
     private void buildLocationRequestObject() {
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(30 * 1000)        // 30 seconds, in milliseconds
-                .setFastestInterval(10 * 1000);  // 10 seconds, in milliseconds
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                //.setInterval(30 * 1000)        // 30 seconds, in milliseconds
+                //.setFastestInterval(10 * 1000);  // 10 seconds, in milliseconds
 
     }
 
@@ -121,12 +121,14 @@ public class LocationModel extends Application implements GoogleApiClient.Connec
 
     public void requestLocation() {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            Log.d(TAG, "Time since last location update: " + String.valueOf(mLastLocation.getTime()));
+        /*if (mLastLocation != null√) {
+            long time = System.currentTimeMillis() - mLastLocation.getTime();
+
+            Log.d(TAG, "Time since last location update: " + time);
             handleNewLocation(mLastLocation);
-        } else {
+        } else {*/
             Log.e(TAG, "No saved location requesting new.");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
+        //}
     }
 }

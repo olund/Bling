@@ -66,10 +66,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setColorSchemeResources(
-                R.color.refresh_progress_1,
-                R.color.refresh_progress_2,
-                R.color.refresh_progress_3);
-
+                R.color.refresh_progress_1);
 
         friendList = new ArrayList<>();
         adapter = new SwipeFriendListAdapter(getActivity(), friendList);
@@ -104,7 +101,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void stateChanged() {
+    public void locationChanged() {
         Location location = LocationModel.getInstance().getLocation();
         Log.d(TAG, "FriendsFragment says: Location changed: " + String.valueOf(location));
     }

@@ -1,6 +1,5 @@
 package com.bling.app.fragments;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,15 +14,11 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
-import com.bling.app.activity.MainActivity;
 import com.bling.app.app.BlingApp;
-import com.bling.app.helper.Friend;
 import com.bling.app.helper.LocationModel;
 import com.bling.app.helper.Message;
 import com.bling.app.helper.SwipeHistoryListAdapter;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,6 +60,9 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         listView = (ListView) rootView.findViewById(R.id.listView);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
 
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.refresh_progress_1);
+
         messageList = new ArrayList<>();
         adapter = new SwipeHistoryListAdapter(getActivity(), messageList);
         listView.setAdapter(adapter);
@@ -87,7 +85,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void stateChanged() {
+    public void locationChanged() {
         Location location = LocationModel.getInstance().getLocation();
         Log.d(TAG, "HistoryFragment says: Location changed: " + String.valueOf(location));
     }
