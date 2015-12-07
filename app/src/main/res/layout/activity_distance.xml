@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="200m"
-            android:id="@+id/textView2"
+            android:id="@+id/distance"
             android:background="@drawable/circle"
             android:textColor="@android:color/white"
             android:layout_centerVertical="true"
