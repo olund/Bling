@@ -40,8 +40,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     //private String URL = "http://pastebin.com/raw.php?i=PDFz2MAc";
     private String URL = "http://192.168.1.210:3000/users/messages/5665ca0e1b25f2514a062525";
 
-
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
     private SwipeHistoryListAdapter adapter;
@@ -94,8 +92,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     default:
                         break;
                 }
-
-
             }
         });
 
@@ -115,13 +111,12 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
          * As animation won't start on onCreate, post runnable is used
          */
         swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                    fetchMessages();
-                }
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                fetchMessages();
             }
-        );
+        });
         return rootView;
     }
 
@@ -146,11 +141,8 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // showing refresh animation before making http call
         swipeRefreshLayout.setRefreshing(true);
 
-
         // Clear list
         messageList.clear();
-
-        // appending offset to url
 
         String url = URL;
         JsonArrayRequest req = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
@@ -188,11 +180,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         });
 
-
-
         // Adding request to request queue
         BlingApp.getInstance().addToRequestQueue(req);
-
     }
-
 }
