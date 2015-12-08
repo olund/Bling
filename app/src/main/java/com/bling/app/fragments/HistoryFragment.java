@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.bling.app.R;
 import com.bling.app.activity.DistanceActivity;
+import com.bling.app.activity.PositionActivity;
 import com.bling.app.app.BlingApp;
 import com.bling.app.helper.LocationModel;
 import com.bling.app.helper.Message;
@@ -72,26 +73,39 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
                 Log.d(TAG, "Message from: " + message.from + " clicked.");
 
+                if (message.type.equals(Constant.MESSAGE_TYPE_DISTANCE)) {
+                    Intent intent = new Intent(getContext(), DistanceActivity.class);
+                    intent.putExtra("message", message);
+                    intent.putExtra("currentLocation", mLocation);
+
+                    startActivity(intent);
+                } else if (message.type.equals(Constant.MESSAGE_TYPE_POSITION)) {
+                    Intent intent = new Intent(getContext(), PositionActivity.class);
+                    intent.putExtra("message", message);
+                    intent.putExtra("currentLocation", mLocation);
+
+                    startActivity(intent);
+                }
+                /*
                 switch (message.type) {
                     case Constant.MESSAGE_TYPE_DISTANCE:
-
                         Intent intent = new Intent(getContext(), DistanceActivity.class);
                         intent.putExtra("message", message);
                         intent.putExtra("currentLocation", mLocation);
 
                         startActivity(intent);
-
                         break;
 
                     case Constant.MESSAGE_TYPE_FRIEND_REQUEST:
                         break;
 
                     case Constant.MESSAGE_TYPE_POSITION:
+
                         break;
 
                     default:
                         break;
-                }
+                } */
             }
         });
 
