@@ -3,6 +3,7 @@ package com.bling.app.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +32,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
+import com.bling.app.app.BlingApp;
+import com.bling.app.helper.Constant;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +52,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity {
 
+    public static final String TAG = LoginActivity.class.getSimpleName();
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -118,13 +129,13 @@ public class LoginActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check for a valid username.
         if (TextUtils.isEmpty(username)) {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
@@ -142,11 +153,6 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**
@@ -195,6 +201,7 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mUsername;
         private final String mPassword;
+        final String[] mUserId = {""};
 
         UserLoginTask(String username, String password) {
             mUsername = username;
@@ -212,24 +219,63 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+            requestLogin();
+            return false;
+        }
+
+        private void requestLogin() {
+            // Create JSON object to SEND.
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("username", mUsername);
+                obj.put("password", mPassword);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            // TODO: register the new account here.
-            return true;
+            // Send HTTP POST with JSON object.
+            JsonObjectRequest req = new JsonObjectRequest(Constant.URL_LOGIN, obj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        Log.i(TAG, response.toString(4));
+                        if (response.has("err")) {
+                            mUsernameView.setError(getString(R.string.error_invalid_user));
+                            mUsernameView.requestFocus();
+                            return;
+                        } else {
+                            Log.d(TAG, "Logged in");
+                            mUserId[0] = response.getString("_id");
+                            onPostExecute(true);
+                            return;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "Failed to login");
+                    return;
+                }
+            });
+            BlingApp.getInstance().addToRequestQueue(req);
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            Log.d(TAG, "Post: " + success);
             mAuthTask = null;
             showProgress(false);
 
             if (success) {
+                SharedPreferences sharedPref = getSharedPreferences(Constant.USER_PREFS, 0);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(Constant.USERNAME, mUsername);
+                editor.putString(Constant.USER_ID, mUserId[0]);
+                editor.commit();
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

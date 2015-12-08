@@ -36,4 +36,6 @@
     <string name="friend_request_message">Wants to be your friend</string>
     <string name="action_accept_friend">Accept</string>
     <string name="error_user_not_found">User not found</string>
+    <string name="error_invalid_user">Invalid username or password</string>
+    <string name="title_logout">Logout</string>
 </resources>

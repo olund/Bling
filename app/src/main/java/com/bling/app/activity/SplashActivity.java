@@ -46,15 +46,29 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 2);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 2) {
+            SharedPreferences prefs = getSharedPreferences(Constant.USER_PREFS, 0);
+            String username = prefs.getString(Constant.USERNAME, "");
+            if (!username.equals("")) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
     }
 }

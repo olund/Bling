@@ -2,6 +2,7 @@ package com.bling.app.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.bling.app.R;
 import com.bling.app.fragments.FriendsFragment;
 import com.bling.app.fragments.HistoryFragment;
 import com.bling.app.fragments.NearbyFragment;
+import com.bling.app.helper.Constant;
 import com.bling.app.helper.LocationModel;
 
 import java.util.ArrayList;
@@ -120,8 +122,17 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_logout) {
+            SharedPreferences sharedPref = getSharedPreferences(Constant.USER_PREFS, 0);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(Constant.USERNAME, "");
+            editor.putString(Constant.USER_ID, "");
+            editor.commit();
+
+            Intent intent = new Intent(this, SplashActivity.class);
+            startActivity(intent);
+            finish();
+
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_login) {
