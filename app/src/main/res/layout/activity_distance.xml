@@ -74,8 +74,7 @@
                 android:layout_below="@+id/user"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:elevation="20dp"/>
+                android:layout_marginBottom="20dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
