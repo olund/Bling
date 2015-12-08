@@ -22,9 +22,6 @@ public class SwipeHistoryListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Message> messageList;
-    private final String POSITION = "position";
-    private final String DISTANCE = "distance";
-    private final String FRIEND_REQUEST = "friendReq";
 
     public SwipeHistoryListAdapter(Activity activity, List<Message> messageList) {
         this.activity = activity;
@@ -59,15 +56,15 @@ public class SwipeHistoryListAdapter extends BaseAdapter {
 
         if (messageList.get(position).type != null) {
 
-            if (messageList.get(position).type.equals(FRIEND_REQUEST)) {
+            if (messageList.get(position).type.equals(Constant.MESSAGE_TYPE_FRIEND_REQUEST)) {
                 convertView = inflater.inflate(R.layout.list_item_friend_request, null);
             }
 
-            if (messageList.get(position).type.equals(DISTANCE)) {
+            if (messageList.get(position).type.equals(Constant.MESSAGE_TYPE_DISTANCE)) {
                 convertView = inflater.inflate(R.layout.list_item_distance, null);
             }
 
-            if (messageList.get(position).type.equals(POSITION)) {
+            if (messageList.get(position).type.equals(Constant.MESSAGE_TYPE_POSITION)) {
                 convertView = inflater.inflate(R.layout.list_item_position, null);
             }
 
