@@ -5,6 +5,8 @@ import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -13,9 +15,9 @@ import com.bling.app.helper.Message;
 
 public class DistanceActivity extends AppCompatActivity {
 
-    private TextView mDistanceText;
-
-
+    private Button mDistanceButton;
+    private Button mSendBack;
+    private TextView mFromText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +31,22 @@ public class DistanceActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Message message = (Message) intent.getParcelableExtra("message");
 
-        mDistanceText = (TextView) findViewById(R.id.distance);
+        mDistanceButton = (Button) findViewById(R.id.distance);
+
+        mDistanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDistanceButton.setElevation(0);
+            }
+        });
+
+        mFromText = (TextView) findViewById(R.id.user);
 
         Location curr = (Location) intent.getParcelableExtra("currentLocation");
 
-        mDistanceText.setText(calculateDistance(curr, message.location));
+        mDistanceButton.setText(calculateDistance(curr, message.location));
+        mFromText.setText(message.from + " is");
     }
-
 
     private String calculateDistance(Location currentLocation, Location messageLocation) {
 
