@@ -38,7 +38,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="activity.MainActivity"/>
         </activity>
-        <activity android:name=".activity.DistanceActivity">
+        <activity
+            android:name=".activity.DistanceActivity"
+            android:label="@string/title_back">
         </activity>
     </application>
 
