@@ -1,18 +1,34 @@
 package com.bling.app.activity;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
+import com.bling.app.app.BlingApp;
+import com.bling.app.helper.Constant;
+import com.bling.app.helper.Message;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AddFriendActivity extends AppCompatActivity {
 
-    private EditText username;
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+    private EditText mUsername;
+    private Button mAddButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,22 +38,98 @@ public class AddFriendActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        username = (EditText) findViewById(R.id.username);
-        username.clearFocus();
+        mUsername = (EditText) findViewById(R.id.username);
+        mUsername.clearFocus();
 
-        username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mAddButton = (Button) findViewById(R.id.add_button);
+
+        /*mUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    username.setHint(R.string.prompt_friend);
+                    mUsername.setHint(R.string.prompt_friend);
                 }
                 if (hasFocus) {
-                    username.setHint("");
+                    mUsername.setHint("");
+                }
+            }
+        });*/
+
+
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUsername.setError(null);
+                String username = mUsername.getText().toString();
+                if (username.contains(" ")) {
+                    username = username.replace(" ", "");
+                    mUsername.setText(username);
+                }
+
+                View focusView = null;
+                boolean cancel = false;
+
+
+                if (TextUtils.isEmpty(username)) {
+                    mUsername.setError(getString(R.string.error_field_required));
+                    cancel = true;
+                }
+
+                if (cancel) {
+                    mUsername.requestFocus();
+                } else {
+                    sendFriendRequest(username.toLowerCase());
                 }
             }
         });
+
     }
+
+    private void sendFriendRequest(String username) {
+        String URL = "http://192.168.1.210:3000/messages/" + username; // TODO: FIX
+
+        // Create JSON object to SEND.
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("fromId", "5665ce7a31c8f81c4b0129f5"); // TODO: FIX
+            obj.put("type", Constant.MESSAGE_TYPE_FRIEND_REQUEST);
+            obj.put("latitude", 1.1);
+            obj.put("longitude", 1.1);
+            obj.put("read", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Send HTTP POST with JSON object.
+        JsonObjectRequest req = new JsonObjectRequest(URL, obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.i(TAG, response.toString(4));
+
+                    if (response.getInt("err") == 404) {
+                        mUsername.setError(getString(R.string.error_user_not_found));
+                        mUsername.requestFocus();
+                    } else {
+                        Log.d(TAG, "Friend request sent");
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, error.getMessage());
+            }
+        });
+
+        // Adding request to request queue
+        BlingApp.getInstance().addToRequestQueue(req);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

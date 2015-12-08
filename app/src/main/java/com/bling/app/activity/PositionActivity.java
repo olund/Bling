@@ -79,7 +79,7 @@ public class PositionActivity extends AppCompatActivity implements OnMapReadyCal
         try {
             obj.put("fromId", message.fromId); // TODO: FIX
             obj.put("toId", message.fromId);
-            obj.put("type", Constant.MESSAGE_TYPE_DISTANCE);
+            obj.put("type", Constant.MESSAGE_TYPE_POSITION);
             obj.put("latitude", curr.getLatitude());
             obj.put("longitude", curr.getLongitude());
             obj.put("read", "0");

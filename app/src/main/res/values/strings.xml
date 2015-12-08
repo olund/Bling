@@ -35,4 +35,5 @@
     <string name="action_bling">BLING BACK</string>
     <string name="friend_request_message">Wants to be your friend</string>
     <string name="action_accept_friend">Accept</string>
+    <string name="error_user_not_found">User not found</string>
 </resources>
