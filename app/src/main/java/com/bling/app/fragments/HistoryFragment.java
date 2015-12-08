@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.bling.app.R;
 import com.bling.app.activity.DistanceActivity;
+import com.bling.app.activity.FriendRequestActivity;
 import com.bling.app.activity.PositionActivity;
 import com.bling.app.app.BlingApp;
 import com.bling.app.helper.LocationModel;
@@ -73,46 +74,39 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
                 Log.d(TAG, "Message from: " + message.from + " clicked.");
 
-                if (message.type.equals(Constant.MESSAGE_TYPE_DISTANCE)) {
-                    Intent intent = new Intent(getContext(), DistanceActivity.class);
-                    intent.putExtra("message", message);
-                    intent.putExtra("currentLocation", mLocation);
-
-                    startActivity(intent);
-                } else if (message.type.equals(Constant.MESSAGE_TYPE_POSITION)) {
-                    Intent intent = new Intent(getContext(), PositionActivity.class);
-                    intent.putExtra("message", message);
-                    intent.putExtra("currentLocation", mLocation);
-
-                    startActivity(intent);
-                }
-                /*
                 switch (message.type) {
                     case Constant.MESSAGE_TYPE_DISTANCE:
-                        Intent intent = new Intent(getContext(), DistanceActivity.class);
-                        intent.putExtra("message", message);
-                        intent.putExtra("currentLocation", mLocation);
+                        Intent distanceIntent = new Intent(getContext(), DistanceActivity.class);
+                        distanceIntent.putExtra("message", message);
+                        distanceIntent.putExtra("currentLocation", mLocation);
 
-                        startActivity(intent);
+                        startActivity(distanceIntent);
                         break;
 
                     case Constant.MESSAGE_TYPE_FRIEND_REQUEST:
+                        Intent friendIntent = new Intent(getContext(), FriendRequestActivity.class);
+                        friendIntent.putExtra("message", message);
+
+                        startActivity(friendIntent);
                         break;
 
                     case Constant.MESSAGE_TYPE_POSITION:
+                        Intent positionIntent = new Intent(getContext(), PositionActivity.class);
+                        positionIntent.putExtra("message", message);
+                        positionIntent.putExtra("currentLocation", mLocation);
 
+                        startActivity(positionIntent);
                         break;
 
                     default:
                         break;
-                } */
+                }
             }
         });
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
 
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.refresh_progress_1);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1);
 
         messageList = new ArrayList<>();
         adapter = new SwipeHistoryListAdapter(getActivity(), messageList);
