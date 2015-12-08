@@ -77,6 +77,10 @@ public class SwipeHistoryListAdapter extends BaseAdapter {
             from.setText(messageList.get(position).from);
             created.setText(messageList.get(position).getAge());
 
+            if (!messageList.get(position).read) {
+                created.append(" - tap to view");
+            }
+
             ImageView img = (ImageView) convertView.findViewById(R.id.icon);
         } else {
             Log.e(TAG, "Invalid message");
