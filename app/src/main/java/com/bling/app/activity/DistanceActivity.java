@@ -34,13 +34,6 @@ public class DistanceActivity extends AppCompatActivity {
 
         mDistanceButton = (Button) findViewById(R.id.distance);
 
-        mDistanceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDistanceButton.setElevation(0);
-            }
-        });
-
         mFromText = (TextView) findViewById(R.id.user);
 
         Location curr = (Location) intent.getParcelableExtra("currentLocation");
