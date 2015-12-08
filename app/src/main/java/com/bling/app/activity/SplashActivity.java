@@ -28,7 +28,7 @@ public class SplashActivity extends AppCompatActivity {
         String username = prefs.getString(Constant.USERNAME, "");
         Log.e(TAG, "USERNAME: " + username);
 
-        if (username != "") {
+        if (!username.equals("")) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -46,7 +46,6 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
-
                 startActivity(intent);
             }
         });
