@@ -6,10 +6,18 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
+import com.bling.app.app.BlingApp;
+import com.bling.app.helper.Constant;
 import com.bling.app.helper.Message;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,7 +27,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class PositionActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
 
     private GoogleMap mMap;
     private Button mSendBack;
@@ -46,6 +60,52 @@ public class PositionActivity extends AppCompatActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mSendBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendPositionRequest(mMessage, mLocation);
+                finish();
+            }
+        });
+
+    }
+
+    private void sendPositionRequest(Message message, Location curr) {
+        String URL = "http://192.168.1.210:3000/messages";
+
+        // Create JSON object to SEND.
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("fromId", message.fromId); // TODO: FIX
+            obj.put("toId", message.fromId);
+            obj.put("type", Constant.MESSAGE_TYPE_DISTANCE);
+            obj.put("latitude", curr.getLatitude());
+            obj.put("longitude", curr.getLongitude());
+            obj.put("read", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Send HTTP POST with JSON object.
+        JsonObjectRequest req = new JsonObjectRequest(URL, obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.i(TAG, response.toString(4));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, error.getMessage());
+            }
+        });
+
+        // Adding request to request queue
+        BlingApp.getInstance().addToRequestQueue(req);
     }
 
 

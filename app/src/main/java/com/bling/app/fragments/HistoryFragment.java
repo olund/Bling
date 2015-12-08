@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -40,8 +41,8 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public static final String TAG = HistoryFragment.class.getSimpleName();
 
     //private String URL = "http://pastebin.com/raw.php?i=PDFz2MAc";
-    private String URL = "http://192.168.1.210:3000/users/messages/5665ca0e1b25f2514a062525";
-
+    //private String URL = "http://192.168.1.210:3000/users/messages/5665ca0e1b25f2514a062525";
+    private String URL = "http://192.168.1.210:3000/users/messages/5665ce7a31c8f81c4b0129f5";
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
     private SwipeHistoryListAdapter adapter;
