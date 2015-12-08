@@ -1,14 +1,20 @@
 package com.bling.app.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.Preference;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.bling.app.R;
+import com.bling.app.helper.Constant;
 
 public class SplashActivity extends AppCompatActivity {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private Button mRegisterButton;
     private Button mLoginButton;
@@ -17,6 +23,16 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        SharedPreferences prefs = getSharedPreferences(Constant.USER_PREFS, 0);
+        String username = prefs.getString(Constant.USERNAME, "");
+        Log.e(TAG, "USERNAME: " + username);
+
+        if (username != "") {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         setupButtons();
     }
