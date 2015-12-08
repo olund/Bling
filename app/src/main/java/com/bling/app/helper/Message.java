@@ -45,8 +45,7 @@ public class Message implements Parcelable {
     }
 
     public String getAge() {
-        // TODO: Remove dot from Date format
-        return (String) DateUtils.getRelativeTimeSpanString(this.created, System.currentTimeMillis(), 0L, DateUtils.FORMAT_ABBREV_ALL);
+        return (String) DateUtils.getRelativeTimeSpanString(this.created, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, 0);
     }
 
     protected Message(Parcel in) {
