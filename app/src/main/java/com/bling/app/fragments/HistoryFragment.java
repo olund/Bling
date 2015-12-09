@@ -1,8 +1,10 @@
 package com.bling.app.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -20,12 +22,13 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.bling.app.R;
 import com.bling.app.activity.DistanceActivity;
 import com.bling.app.activity.FriendRequestActivity;
+import com.bling.app.activity.MainActivity;
 import com.bling.app.activity.PositionActivity;
 import com.bling.app.app.BlingApp;
 import com.bling.app.helper.LocationModel;
 import com.bling.app.helper.Message;
 import com.bling.app.helper.SwipeHistoryListAdapter;
-
+import android.content.SharedPreferences;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,14 +43,12 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     public static final String TAG = HistoryFragment.class.getSimpleName();
 
-    //private String URL = "http://pastebin.com/raw.php?i=PDFz2MAc";
-    //private String URL = "http://192.168.1.210:3000/users/messages/5665ca0e1b25f2514a062525";
-    private String URL = "http://192.168.1.210:3000/users/messages/5665ce7a31c8f81c4b0129f5";
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
     private SwipeHistoryListAdapter adapter;
     private List<Message> messageList;
     private Location mLocation;
+    private String mUser;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -59,8 +60,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
 
@@ -68,9 +68,38 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         listView = (ListView) rootView.findViewById(R.id.listView);
 
+        SharedPreferences prefs = getActivity().getSharedPreferences(Constant.USER_PREFS, 0);
+        mUser = prefs.getString(Constant.USER_ID, "");
+
+        setupListItemClickListener();
+
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1);
+
+        messageList = new ArrayList<>();
+        adapter = new SwipeHistoryListAdapter(getActivity(), messageList);
+        listView.setAdapter(adapter);
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        /**
+         * Showing Swipe Refresh animation on activity create
+         * As animation won't start on onCreate, post runnable is used
+         */
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                fetchMessages();
+            }
+        });
+        return rootView;
+    }
+
+    private void setupListItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Message message = (Message) listView.getItemAtPosition(position);
 
                 Log.d(TAG, "Message from: " + message.from + " clicked.");
@@ -104,29 +133,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
         });
-
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
-
-        swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1);
-
-        messageList = new ArrayList<>();
-        adapter = new SwipeHistoryListAdapter(getActivity(), messageList);
-        listView.setAdapter(adapter);
-
-        swipeRefreshLayout.setOnRefreshListener(this);
-
-        /**
-         * Showing Swipe Refresh animation on activity create
-         * As animation won't start on onCreate, post runnable is used
-         */
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-                fetchMessages();
-            }
-        });
-        return rootView;
     }
 
     @Override
@@ -153,7 +159,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Clear list
         messageList.clear();
 
-        String url = URL;
+        String url = Constant.URL_HISTORY + mUser;
         JsonArrayRequest req = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray messages) {

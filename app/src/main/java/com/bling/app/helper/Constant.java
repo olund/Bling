@@ -16,6 +16,7 @@ public class Constant {
     public static final String USER_ID = "userId";
     public static final String URL_LOGIN = URL_BASE + "users/login";
     public static final String URL_REGISTER = URL_BASE + "users/register";
+    public static final String URL_HISTORY = URL_BASE + "users/messages/";
 
 
 }
