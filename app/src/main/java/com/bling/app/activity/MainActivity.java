@@ -175,11 +175,14 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        viewPager.setPageMargin(40);
+        viewPager.setPageMarginDrawable(R.drawable.view_pager_margin);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new FriendsFragment(), "FRIENDS");
         adapter.addFragment(new HistoryFragment(), "HISTORY");
         adapter.addFragment(new NearbyFragment(), "NEARBY");
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
+
     }
 }
