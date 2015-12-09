@@ -38,4 +38,5 @@
     <string name="error_user_not_found">User not found</string>
     <string name="error_invalid_user">Invalid username or password</string>
     <string name="title_logout">Logout</string>
+    <string name="api_down">Could not reach Bling servers, try again later.</string>
 </resources>

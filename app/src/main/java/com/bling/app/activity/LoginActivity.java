@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -74,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
     private View mLoginTitle;
     private Button mLoginButton;
+    private TextInputLayout mUsernameWrapper;
+    private TextInputLayout mPasswordWrapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,9 @@ public class LoginActivity extends AppCompatActivity {
         //mLoginTitle = findViewById(R.id.login_title);
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        mUsernameWrapper = (TextInputLayout) findViewById(R.id.username_wrapper);
+        mPasswordWrapper = (TextInputLayout) findViewById(R.id.password_wrapper);
     }
 
     /**
@@ -120,6 +126,9 @@ public class LoginActivity extends AppCompatActivity {
         // Reset errors.
         mUsernameView.setError(null);
         mPasswordView.setError(null);
+        mUsernameWrapper.setErrorEnabled(false);
+        mPasswordWrapper.setErrorEnabled(false);
+
 
         // Store values at the time of the login attempt.
         String username = mUsernameView.getText().toString();
@@ -130,14 +139,16 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
+            mPasswordWrapper.setErrorEnabled(true);
+            mPasswordWrapper.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid username.
         if (TextUtils.isEmpty(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
+            mUsernameWrapper.setErrorEnabled(true);
+            mUsernameWrapper.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
         }
@@ -240,8 +251,8 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         Log.i(TAG, response.toString(4));
                         if (response.has("err")) {
-                            mUsernameView.setError(getString(R.string.error_invalid_user));
-                            mUsernameView.requestFocus();
+                            mUsernameWrapper.setErrorEnabled(true);
+                            mUsernameWrapper.setError(getString(R.string.error_invalid_user));
                             return;
                         } else {
                             Log.d(TAG, "Logged in");
@@ -278,8 +289,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mUsernameWrapper.setErrorEnabled(true);
+                mUsernameWrapper.setError(getString(R.string.api_down));
             }
         }
 
