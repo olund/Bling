@@ -188,7 +188,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Server Error: " + error.getMessage());
 
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.api_down, Toast.LENGTH_LONG).show();
 
                 // stopping swipe refresh
                 swipeRefreshLayout.setRefreshing(false);
