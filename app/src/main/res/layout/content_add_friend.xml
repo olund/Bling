@@ -15,15 +15,8 @@
 
         <Button
             android:id="@+id/add_button"
-            style="?android:textAppearanceLarge"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
-            android:padding="20dp"
-            android:text="@string/action_add_friend"
-            android:textSize="40sp"
-            android:background="@drawable/button_ripple"
-            android:textColor="@color/textColorPrimary"/>
+            style="@style/fullSizeButton"
+            android:text="@string/action_add_friend"/>
 
     </LinearLayout>
 

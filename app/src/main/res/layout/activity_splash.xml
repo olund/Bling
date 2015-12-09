@@ -33,28 +33,18 @@
 
     <Button
         android:id="@+id/login_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
         android:text="@string/action_sign_in"
-        android:textSize="40sp"
-        android:background="@color/colorPrimaryLight"
-        android:textColor="@color/textColorPrimary"
-        android:layout_alignParentBottom="true" />
+        style="@style/fullSizeButton"
+        android:layout_alignParentBottom="true"/>
 
     <View
         style="@style/Divider"
         android:id="@+id/button_divider"
-        android:layout_above="@id/login_button" />
+        android:layout_above="@id/login_button"/>
 
     <Button
         android:id="@+id/register_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
         android:text="@string/action_register"
-        android:textSize="40sp"
-        android:background="@color/colorPrimaryLight"
-        android:textColor="@color/textColorPrimary"
+        style="@style/fullSizeButton"
         android:layout_above="@id/button_divider"/>
 </RelativeLayout>
