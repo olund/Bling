@@ -19,4 +19,6 @@ public class Constant {
     public static final String URL_HISTORY = URL_BASE + "users/messages/";
     public static final String URL_FRIENDS = URL_BASE + "users/friends/";
 
+    public static final String URL_MESSAGES = URL_BASE + "messages/";
+
 }

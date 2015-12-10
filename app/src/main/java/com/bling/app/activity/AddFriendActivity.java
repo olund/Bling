@@ -1,5 +1,6 @@
 package com.bling.app.activity;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -37,6 +38,9 @@ public class AddFriendActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        final String user = intent.getStringExtra("mUser");
 
         mUsername = (EditText) findViewById(R.id.username);
         mUsername.clearFocus();
@@ -79,20 +83,20 @@ public class AddFriendActivity extends AppCompatActivity {
                 if (cancel) {
                     mUsername.requestFocus();
                 } else {
-                    sendFriendRequest(username.toLowerCase());
+                    sendFriendRequest(username.toLowerCase(), user);
                 }
             }
         });
 
     }
 
-    private void sendFriendRequest(String username) {
-        String URL = "http://192.168.1.210:3000/messages/" + username; // TODO: FIX
+    private void sendFriendRequest(String username, String user) {
+        String url = Constant.URL_MESSAGES + username;
 
         // Create JSON object to SEND.
         JSONObject obj = new JSONObject();
         try {
-            obj.put("fromId", "5665ce7a31c8f81c4b0129f5"); // TODO: FIX
+            obj.put("fromId", user);
             obj.put("type", Constant.MESSAGE_TYPE_FRIEND_REQUEST);
             obj.put("latitude", 1.1);
             obj.put("longitude", 1.1);
@@ -102,13 +106,12 @@ public class AddFriendActivity extends AppCompatActivity {
         }
 
         // Send HTTP POST with JSON object.
-        JsonObjectRequest req = new JsonObjectRequest(URL, obj, new Response.Listener<JSONObject>() {
+        JsonObjectRequest req = new JsonObjectRequest(url, obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     Log.i(TAG, response.toString(4));
-
-                    if (response.getInt("err") == 404) {
+                    if (response.has("err")) {
                         mUsername.setError(getString(R.string.error_user_not_found));
                         mUsername.requestFocus();
                     } else {

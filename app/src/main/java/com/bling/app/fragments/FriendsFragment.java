@@ -84,6 +84,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddFriendActivity.class);
+                intent.putExtra("mUser", mUser);
                 startActivity(intent);
             }
         });
