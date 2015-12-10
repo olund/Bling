@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
 import com.bling.app.activity.DistanceActivity;
 import com.bling.app.activity.FriendRequestActivity;
@@ -49,6 +50,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private List<Message> messageList;
     private Location mLocation;
     private String mUser;
+    private int mLastClicked;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -97,10 +99,43 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return rootView;
     }
 
+    private void markMessageAsRead(Message message) {
+        String url = Constant.URL_MESSAGES + message.id;
+
+        // Create JSON object to SEND.
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("read", true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Send HTTP PUT with JSON object.
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.i(TAG, response.toString(4));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, error.getMessage());
+            }
+        });
+
+        // Adding request to request queue
+        BlingApp.getInstance().addToRequestQueue(req);
+    }
+
     private void setupListItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Message message = (Message) listView.getItemAtPosition(position);
+                mLastClicked = position;
 
                 Log.d(TAG, "Message from: " + message.from + " clicked.");
 
@@ -111,6 +146,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         distanceIntent.putExtra("currentLocation", mLocation);
                         distanceIntent.putExtra("mUser", mUser);
 
+                        markMessageAsRead(message);
                         startActivity(distanceIntent);
                         break;
 
@@ -128,6 +164,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         positionIntent.putExtra("currentLocation", mLocation);
                         positionIntent.putExtra("mUser", mUser);
 
+                        markMessageAsRead(message);
                         startActivity(positionIntent);
                         break;
 
