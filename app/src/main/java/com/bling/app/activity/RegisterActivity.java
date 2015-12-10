@@ -12,6 +12,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,11 +25,22 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
+import com.bling.app.app.BlingApp;
 import com.bling.app.fragments.DatePickerFragment;
+import com.bling.app.helper.Constant;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Kalle on 04/12/15.
@@ -37,6 +50,10 @@ public class RegisterActivity extends AppCompatActivity {
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
+
+    public static final String TAG = RegisterActivity.class.getSimpleName();
+
+
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
@@ -81,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptRegister();
                     return true;
                 }
                 return false;
@@ -92,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                attemptRegister();
             }
         });
 
@@ -136,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptRegister() {
         if (mAuthTask != null) {
             return;
         }
@@ -150,6 +167,16 @@ public class RegisterActivity extends AppCompatActivity {
         String username = mUsernameView.getText().toString();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+
+        Date date = new Date(
+            mMonth.getSelectedItem().toString()
+            + " "
+            + mDay.getSelectedItem().toString()
+            + ", "
+            + mYear.getSelectedItem().toString()
+        );
+
+
 
         boolean cancel = false;
         View focusView = null;
@@ -183,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserRegisterTask(username, email, password);
+            mAuthTask = new UserRegisterTask(username, email, password, date);
             mAuthTask.execute((Void) null);
         }
     }
@@ -240,11 +267,50 @@ public class RegisterActivity extends AppCompatActivity {
         private final String mUsername;
         private final String mEmail;
         private final String mPassword;
+        private Date mBirthday;
 
-        UserRegisterTask(String username, String email, String password) {
+        UserRegisterTask(String username, String email, String password, Date birthday) {
             mUsername = username;
             mEmail = email;
             mPassword = password;
+            mBirthday = birthday;
+        }
+
+        private void requestRegister() {
+            JSONObject obj = new JSONObject();
+
+            try {
+                obj.put("username", mUsername);
+                obj.put("password", mEmail);
+                obj.put("email", mPassword);
+                obj.put("birthday", mBirthday);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Log.d(TAG, obj.toString());
+
+            // Send HTTP POST with JSON object.
+            JsonObjectRequest req = new JsonObjectRequest(Constant.URL_REGISTER, obj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+
+                        Log.i(TAG, response.toString(4));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "Failed to login");
+                    return;
+                }
+            });
+            BlingApp.getInstance().addToRequestQueue(req);
+
         }
 
         @Override
@@ -254,17 +320,13 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
+                requestRegister();
+
             } catch (InterruptedException e) {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+
 
             // TODO: register the new account here.
             return true;
