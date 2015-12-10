@@ -1,10 +1,12 @@
 package com.bling.app.activity;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
         LocationModel.getInstance().setListener(this);
         LocationModel.getInstance().setContext(this);
 
-        //checkPermissions();
+        checkPermissions();
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    locationPermission = true;
+                    LocationModel.getInstance().permissionState(true);
 
 
                 } else {
@@ -80,27 +82,9 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
+            // Other permissions results here
         }
     }
-
-    /*
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
         return super.onOptionsItemSelected(item);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void checkPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -170,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
             }
         } else {
             Log.e(TAG, "GRANTED");
-            locationPermission = true;
+            LocationModel.getInstance().permissionState(true);
         }
     }
 

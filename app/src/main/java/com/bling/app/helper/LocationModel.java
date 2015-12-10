@@ -59,8 +59,10 @@ public class LocationModel extends Application implements GoogleApiClient.Connec
     public void permissionState(boolean state) {
         mLocationPermission = state;
 
-        //if (mLocationPermission)
-        //
+        Log.d(TAG, "Location permission set to" + state);
+        if (mLocationPermission) {
+            buildLocationRequestObject();
+        }
     }
 
     public Location getLocation() {
@@ -75,14 +77,16 @@ public class LocationModel extends Application implements GoogleApiClient.Connec
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.e(TAG, "Google Play services connected.");
-        buildLocationRequestObject();
-        requestLocation();
+        Log.d(TAG, "Google Play services connected.");
+        if (mLocationPermission) {
+            buildLocationRequestObject();
+            requestLocation();
+        }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.e(TAG, "Google Play services suspended.");
+        Log.d(TAG, "Google Play services suspended.");
     }
 
     @Override
@@ -120,15 +124,17 @@ public class LocationModel extends Application implements GoogleApiClient.Connec
     }
 
     public void requestLocation() {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        /*if (mLastLocation != null√) {
-            long time = System.currentTimeMillis() - mLastLocation.getTime();
+        if (mLocationPermission) {
+            // Get last seen location
+            //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-            Log.d(TAG, "Time since last location update: " + time);
-            handleNewLocation(mLastLocation);
-        } else {*/
-            Log.e(TAG, "No saved location requesting new.");
+            //Log.e(TAG, "No saved location requesting new.");
+            // Request new location
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        //}
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        } else {
+            Log.e(TAG, "No location permission, can't get location.");
+        }
+
     }
 }

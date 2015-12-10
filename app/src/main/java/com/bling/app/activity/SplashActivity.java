@@ -26,9 +26,9 @@ public class SplashActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences(Constant.USER_PREFS, 0);
         String username = prefs.getString(Constant.USERNAME, "");
-        Log.e(TAG, "USERNAME: " + username);
 
         if (!username.equals("")) {
+            Log.i(TAG, "User info exists, logging in.");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
