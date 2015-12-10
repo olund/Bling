@@ -116,6 +116,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     case Constant.MESSAGE_TYPE_FRIEND_REQUEST:
                         Intent friendIntent = new Intent(getContext(), FriendRequestActivity.class);
                         friendIntent.putExtra("message", message);
+                        friendIntent.putExtra("mUser", mUser);
 
                         startActivity(friendIntent);
                         break;

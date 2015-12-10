@@ -39,7 +39,8 @@ public class FriendRequestActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        Message message = (Message) intent.getParcelableExtra("message");
+        final Message message = (Message) intent.getParcelableExtra("message");
+        final String user = intent.getStringExtra("mUser");
 
         mAcceptButton = (Button) findViewById(R.id.accept);
 
@@ -50,30 +51,27 @@ public class FriendRequestActivity extends AppCompatActivity {
         mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sendFriendRequest(message, user);
                 finish();
             }
         });
     }
 
-    private void sendFriendRequest(Message message, Location curr) {
-        String URL = "http://192.168.1.210:3000/messages"; // TODO: FIX
+    private void sendFriendRequest(Message message, String user) {
+        String url = Constant.URL_FRIENDS;
 
         // Create JSON object to SEND.
         JSONObject obj = new JSONObject();
         try {
-            obj.put("fromId", message.fromId); // TODO: FIX
-            obj.put("toId", message.fromId);
-            obj.put("type", Constant.MESSAGE_TYPE_DISTANCE);
-            obj.put("latitude", curr.getLatitude());
-            obj.put("longitude", curr.getLongitude());
-            obj.put("read", "0");
+            obj.put("userOneId", message.fromId);
+            obj.put("userTwoId", user);
+            obj.put("messageId", message.id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         // Send HTTP POST with JSON object.
-        JsonObjectRequest req = new JsonObjectRequest(URL, obj, new Response.Listener<JSONObject>() {
+        JsonObjectRequest req = new JsonObjectRequest(url, obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
