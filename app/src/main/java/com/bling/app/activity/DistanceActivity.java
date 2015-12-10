@@ -53,6 +53,7 @@ public class DistanceActivity extends AppCompatActivity {
         mFromText = (TextView) findViewById(R.id.user);
 
         final Location curr = (Location) intent.getParcelableExtra("currentLocation");
+        final String user = intent.getStringExtra("mUser");
 
         mDistanceButton.setText(calculateDistance(curr, message.location));
         mFromText.setText(message.from + " is");
@@ -62,20 +63,20 @@ public class DistanceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                sendDistanceRequest(message, curr);
+                sendDistanceRequest(message, curr, user);
                 finish();
             }
         });
 
     }
 
-    private void sendDistanceRequest(Message message, Location curr) {
-        String URL = "http://192.168.1.210:3000/messages";
+    private void sendDistanceRequest(Message message, Location curr, String user) {
+        String URL = Constant.URL_MESSAGES;
 
         // Create JSON object to SEND.
         JSONObject obj = new JSONObject();
         try {
-            obj.put("fromId", message.fromId); // TODO: FIX
+            obj.put("fromId", user);
             obj.put("toId", message.fromId);
             obj.put("type", Constant.MESSAGE_TYPE_DISTANCE);
             obj.put("latitude", curr.getLatitude());

@@ -2,7 +2,6 @@ package com.bling.app.activity;
 
 import android.content.Intent;
 import android.location.Location;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +12,6 @@ import android.widget.Button;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
 import com.bling.app.app.BlingApp;
@@ -55,6 +53,7 @@ public class PositionActivity extends AppCompatActivity implements OnMapReadyCal
         mMessage = intent.getParcelableExtra("message");
 
         mLocation = intent.getParcelableExtra("currentLocation");
+        final String user = intent.getStringExtra("mUser");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -64,20 +63,20 @@ public class PositionActivity extends AppCompatActivity implements OnMapReadyCal
         mSendBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendPositionRequest(mMessage, mLocation);
+                sendPositionRequest(mMessage, mLocation, user);
                 finish();
             }
         });
 
     }
 
-    private void sendPositionRequest(Message message, Location curr) {
-        String URL = "http://192.168.1.210:3000/messages";
+    private void sendPositionRequest(Message message, Location curr, String user) {
+        String URL = Constant.URL_MESSAGES;
 
         // Create JSON object to SEND.
         JSONObject obj = new JSONObject();
         try {
-            obj.put("fromId", message.fromId); // TODO: FIX
+            obj.put("fromId", user);
             obj.put("toId", message.fromId);
             obj.put("type", Constant.MESSAGE_TYPE_POSITION);
             obj.put("latitude", curr.getLatitude());

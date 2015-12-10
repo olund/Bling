@@ -109,6 +109,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         Intent distanceIntent = new Intent(getContext(), DistanceActivity.class);
                         distanceIntent.putExtra("message", message);
                         distanceIntent.putExtra("currentLocation", mLocation);
+                        distanceIntent.putExtra("mUser", mUser);
 
                         startActivity(distanceIntent);
                         break;
@@ -125,6 +126,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         Intent positionIntent = new Intent(getContext(), PositionActivity.class);
                         positionIntent.putExtra("message", message);
                         positionIntent.putExtra("currentLocation", mLocation);
+                        positionIntent.putExtra("mUser", mUser);
 
                         startActivity(positionIntent);
                         break;
