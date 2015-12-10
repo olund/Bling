@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -23,22 +22,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.bling.app.R;
 import com.bling.app.activity.DistanceActivity;
 import com.bling.app.activity.FriendRequestActivity;
-import com.bling.app.activity.MainActivity;
 import com.bling.app.activity.PositionActivity;
 import com.bling.app.app.BlingApp;
+import com.bling.app.helper.Constant;
 import com.bling.app.helper.LocationModel;
 import com.bling.app.helper.Message;
 import com.bling.app.helper.SwipeHistoryListAdapter;
-import android.content.SharedPreferences;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.bling.app.helper.Constant;
 
 public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LocationModel.OnCustomStateListener{
 
@@ -50,7 +46,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private List<Message> messageList;
     private Location mLocation;
     private String mUser;
-    private int mLastClicked;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -80,7 +75,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         swipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1);
 
         messageList = new ArrayList<>();
-        adapter = new SwipeHistoryListAdapter(getActivity(), messageList);
+        adapter = new SwipeHistoryListAdapter(getActivity(), getContext(), messageList);
         listView.setAdapter(adapter);
 
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -99,7 +94,15 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return rootView;
     }
 
-    private void markMessageAsRead(Message message) {
+    private void markMessageAsRead(Message message, int position) {
+        // Updated listview
+        message.read = true;
+        Log.e(TAG, "READ STATUS: " + String.valueOf(message.read));
+        //messageList.remove(position);
+        //messageList.add(position, message);
+        messageList.set(position, message);
+        listView.invalidateViews();
+
         String url = Constant.URL_MESSAGES + message.id;
 
         // Create JSON object to SEND.
@@ -135,7 +138,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Message message = (Message) listView.getItemAtPosition(position);
-                mLastClicked = position;
 
                 Log.d(TAG, "Message from: " + message.from + " clicked.");
 
@@ -146,7 +148,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         distanceIntent.putExtra("currentLocation", mLocation);
                         distanceIntent.putExtra("mUser", mUser);
 
-                        markMessageAsRead(message);
                         startActivity(distanceIntent);
                         break;
 
@@ -164,13 +165,14 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         positionIntent.putExtra("currentLocation", mLocation);
                         positionIntent.putExtra("mUser", mUser);
 
-                        markMessageAsRead(message);
                         startActivity(positionIntent);
                         break;
 
                     default:
                         break;
                 }
+
+                markMessageAsRead(message, position);
             }
         });
     }

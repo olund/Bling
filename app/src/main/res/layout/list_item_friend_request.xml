@@ -20,7 +20,7 @@
         android:padding="12dp"
         android:paddingEnd="16dp"
         android:paddingRight="16dp"
-        android:alpha="0.5"/>
+        android:tint="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/sender"

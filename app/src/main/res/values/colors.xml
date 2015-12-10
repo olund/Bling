@@ -8,10 +8,11 @@
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
 
+    <color name="materialRed">#F44336</color>
+    <color name="materialBlue">#3F51B5</color>
+    <color name="grey">#999999</color>
+
     <color name="refresh_progress_1">@color/colorPrimary</color>
     <color name="refresh_progress_2">#3F51B5</color>
     <color name="refresh_progress_3">@color/colorAccent</color>
-    <color name="materialRed">#F44336</color>
-    <color name="materialBlue">#3F51B5</color>
-    <color name="grey">#333333</color>
 </resources>
