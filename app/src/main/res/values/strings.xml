@@ -39,4 +39,7 @@
     <string name="error_invalid_user">Invalid username or password</string>
     <string name="title_logout">Logout</string>
     <string name="api_down">Could not reach Bling servers, try again later.</string>
+    <string name="bling_alternatives">Select Bling type</string>
+    <string name="alternative_distance">Distance</string>
+    <string name="alternative_position">Position</string>
 </resources>
