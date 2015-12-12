@@ -141,35 +141,39 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
                 Log.d(TAG, "Message from: " + message.from + " clicked.");
 
-                switch (message.type) {
-                    case Constant.MESSAGE_TYPE_DISTANCE:
-                        Intent distanceIntent = new Intent(getContext(), DistanceActivity.class);
-                        distanceIntent.putExtra("message", message);
-                        distanceIntent.putExtra("currentLocation", mLocation);
-                        distanceIntent.putExtra("mUser", mUser);
+                if(mLocation != null) {
+                    switch (message.type) {
+                        case Constant.MESSAGE_TYPE_DISTANCE:
+                            Intent distanceIntent = new Intent(getContext(), DistanceActivity.class);
+                            distanceIntent.putExtra("message", message);
+                            distanceIntent.putExtra("currentLocation", mLocation);
+                            distanceIntent.putExtra("mUser", mUser);
 
-                        startActivity(distanceIntent);
-                        break;
+                            startActivity(distanceIntent);
+                            break;
 
-                    case Constant.MESSAGE_TYPE_FRIEND_REQUEST:
-                        Intent friendIntent = new Intent(getContext(), FriendRequestActivity.class);
-                        friendIntent.putExtra("message", message);
-                        friendIntent.putExtra("mUser", mUser);
+                        case Constant.MESSAGE_TYPE_FRIEND_REQUEST:
+                            Intent friendIntent = new Intent(getContext(), FriendRequestActivity.class);
+                            friendIntent.putExtra("message", message);
+                            friendIntent.putExtra("mUser", mUser);
 
-                        startActivity(friendIntent);
-                        break;
+                            startActivity(friendIntent);
+                            break;
 
-                    case Constant.MESSAGE_TYPE_POSITION:
-                        Intent positionIntent = new Intent(getContext(), PositionActivity.class);
-                        positionIntent.putExtra("message", message);
-                        positionIntent.putExtra("currentLocation", mLocation);
-                        positionIntent.putExtra("mUser", mUser);
+                        case Constant.MESSAGE_TYPE_POSITION:
+                            Intent positionIntent = new Intent(getContext(), PositionActivity.class);
+                            positionIntent.putExtra("message", message);
+                            positionIntent.putExtra("currentLocation", mLocation);
+                            positionIntent.putExtra("mUser", mUser);
 
-                        startActivity(positionIntent);
-                        break;
+                            startActivity(positionIntent);
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "You need to active your GPS to view this.", Toast.LENGTH_LONG).show();
                 }
 
                 markMessageAsRead(message, position);

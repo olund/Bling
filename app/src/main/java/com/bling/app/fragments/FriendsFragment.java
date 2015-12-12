@@ -54,9 +54,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private Location mLocation;
     private String mUser;
 
-    // initially offset will be 0, later will be updated while parsing the json
-    private int offSet = 0;
-
     public FriendsFragment() {
         // Required empty public constructor
     }
@@ -104,28 +101,33 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
                 Log.d(TAG, "Friend: " + friend.username + " clicked.");
 
-                String names[] = {getString(R.string.alternative_distance),getString(R.string.alternative_position)};
-                final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                View convertView = (View) inflater.inflate(R.layout.alert_list, null);
-                alertDialog.setView(convertView);
-                alertDialog.setTitle(R.string.bling_alternatives);
-                ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, names);
-                lv.setAdapter(adapter);
-                alertDialog.show();
+                if (mLocation != null) {
+                    String names[] = {getString(R.string.alternative_distance),getString(R.string.alternative_position)};
+                    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    View convertView = (View) inflater.inflate(R.layout.alert_list, null);
+                    alertDialog.setView(convertView);
+                    alertDialog.setTitle(R.string.bling_alternatives);
+                    ListView lv = (ListView) convertView.findViewById(R.id.listView1);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, names);
+                    lv.setAdapter(adapter);
+                    alertDialog.show();
 
-                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                        if (pos == 0) {
-                            sendRequest(friend, Constant.MESSAGE_TYPE_DISTANCE);
-                        } else if(pos == 1){
-                            sendRequest(friend, Constant.MESSAGE_TYPE_POSITION);
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                            if (pos == 0) {
+                                sendRequest(friend, Constant.MESSAGE_TYPE_DISTANCE);
+                            } else if(pos == 1){
+                                sendRequest(friend, Constant.MESSAGE_TYPE_POSITION);
+                            }
+                            alertDialog.dismiss();
+                            Toast.makeText(getActivity(), "Bling sent to " + friend.username, Toast.LENGTH_SHORT).show();
                         }
-                        alertDialog.dismiss();
-                    }
-                });
+                    });
+                } else {
+                    Toast.makeText(getActivity(), "You need to active your GPS.", Toast.LENGTH_LONG).show();
+                }
             }
         });
         /**
