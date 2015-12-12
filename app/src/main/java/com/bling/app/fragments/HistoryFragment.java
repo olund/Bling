@@ -89,6 +89,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
             public void run() {
                 swipeRefreshLayout.setRefreshing(true);
                 fetchMessages();
+                LocationModel.getInstance().requestLocation();
             }
         });
         return rootView;
@@ -98,8 +99,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Updated listview
         message.read = true;
         Log.e(TAG, "READ STATUS: " + String.valueOf(message.read));
-        //messageList.remove(position);
-        //messageList.add(position, message);
         messageList.set(position, message);
         listView.invalidateViews();
 
