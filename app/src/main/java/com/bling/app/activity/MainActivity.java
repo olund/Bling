@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
         adapter.addFragment(new NearbyFragment(), "NEARBY");
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
+        viewPager.setOffscreenPageLimit(3);
 
     }
 }
