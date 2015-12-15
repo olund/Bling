@@ -281,8 +281,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             try {
                 obj.put("username", mUsername);
-                obj.put("password", mEmail);
-                obj.put("email", mPassword);
+                obj.put("password", mPassword);
+                obj.put("email", mEmail);
                 obj.put("birthday", mBirthday);
             } catch (JSONException e) {
                 e.printStackTrace();
