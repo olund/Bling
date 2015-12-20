@@ -114,14 +114,14 @@ public class MainActivity extends AppCompatActivity implements LocationModel.OnC
 
         }
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_login) {
+        /*if (id == R.id.action_login) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
         if (id == R.id.action_register) {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

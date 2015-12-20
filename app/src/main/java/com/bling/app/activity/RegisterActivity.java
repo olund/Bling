@@ -24,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -297,7 +298,8 @@ public class RegisterActivity extends AppCompatActivity {
                     try {
 
                         Log.i(TAG, response.toString(4));
-
+                        // TODO: Popup with real message to user. Like user registered or something.
+                        Toast.makeText(getApplicationContext(), "User registered", Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -306,6 +308,7 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e(TAG, "Failed to login");
+
                     return;
                 }
             });

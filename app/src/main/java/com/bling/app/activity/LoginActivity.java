@@ -221,15 +221,6 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
             requestLogin();
             return false;
         }
@@ -291,6 +282,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 mUsernameWrapper.setErrorEnabled(true);
                 mUsernameWrapper.setError(getString(R.string.api_down));
+
             }
         }
 

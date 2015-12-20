@@ -5,7 +5,7 @@ package com.bling.app.helper;
  */
 
 public class Constant {
-    public static final String URL_BASE = "http://192.168.1.210:3000/";
+    public static final String URL_BASE = "http://kalkih.com:3000/";
     public static final String MESSAGE_TYPE_FRIEND_REQUEST = "friendRequest";
     public static final String MESSAGE_TYPE_POSITION = "position";
     public static final String MESSAGE_TYPE_DISTANCE = "distance";

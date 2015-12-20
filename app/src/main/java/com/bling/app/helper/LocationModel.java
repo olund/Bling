@@ -124,7 +124,7 @@ public class LocationModel extends Application implements GoogleApiClient.Connec
     }
 
     public void requestLocation() {
-        if (mLocationPermission) {
+        if (mLocationPermission && mGoogleApiClient.isConnected()) {
             // Get last seen location
             //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 

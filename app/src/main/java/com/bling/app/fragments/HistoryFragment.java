@@ -223,6 +223,8 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     }
 
                     adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "You have no Blings", Toast.LENGTH_LONG).show();
                 }
 
                 // stopping swipe refresh

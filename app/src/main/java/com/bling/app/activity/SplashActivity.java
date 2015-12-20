@@ -14,7 +14,7 @@ import com.bling.app.helper.Constant;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = SplashActivity.class.getSimpleName();
 
     private Button mRegisterButton;
     private Button mLoginButton;
